@@ -51,3 +51,18 @@ steps:
       targetPath: '$(Pipeline.Workspace)'
       artifact: 'drop'
       publishLocation: 'pipeline'
+  - task: replacetokens@4
+    inputs:
+      rootDirectory: k8
+      targetFiles: |
+        mvc-deployment.azure.yaml
+        database-deployment.yaml
+      encoding: 'auto'
+      tokenPattern: 'default'
+      writeBOM: true
+      actionOnMissing: 'warn'
+      keepToken: false
+      actionOnNoFiles: 'continue'
+      enableTransforms: false
+      useLegacyPattern: false
+      enableTelemetry: true
