@@ -13,10 +13,15 @@ steps:
   - task: Maven@3
     inputs:
       mavenPomFile: 'pom.xml'
-      mavenOptions: '-Xmx1072m'
+      mavenOptions: '-Xmx1072m -DskipTests=true'
       javaHomeOption: 'JDKVersion'
       jdkVersionOption: '1.11'
       jdkArchitectureOption: 'x64'
-      publishJUnitResults: true
+      publishJUnitResults: false
       testResultsFiles: '**/surefire-reports/TEST-*.xml'
       goals: 'package'
+  - task: Docker@2
+    inputs:
+      command: 'buildAndPush'
+      Dockerfile: 'docker/WebApp'
+      buildContext: './'
