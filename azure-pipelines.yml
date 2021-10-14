@@ -36,3 +36,18 @@ steps:
       Dockerfile: 'docker/Database'
       buildContext: '.'
       tags: 'v2.$(Build.BuildId)'
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: 'k8'
+      Contents: |
+        database-config-map.yaml
+        database-deployment.yaml
+        database-pv-azure.yaml
+        database-secret.yaml
+        mvc-deployment.azure.yaml
+      TargetFolder: '$(Pipeline.Workspace)'
+  - task: PublishPipelineArtifact@1
+    inputs:
+      targetPath: '$(Pipeline.Workspace)'
+      artifact: 'drop'
+      publishLocation: 'pipeline'
