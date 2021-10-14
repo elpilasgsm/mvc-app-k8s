@@ -1,0 +1,8 @@
+FROM openjdk:11.0.12-oraclelinux8
+VOLUME /tmp
+
+ARG DB_URL
+ARG DB_USER
+ARG DB_PASSWORD
+COPY target/"MVCApp-0.0.1-SNAPSHOT.jar" app.jar
+ENTRYPOINT ["java","-Dspring.datasource.url=${DB_URL}","-Dspring.datasource.username=${DB_USER}","-Dspring.datasource.password=${DB_PASSWORD}","-jar","/app.jar"]
