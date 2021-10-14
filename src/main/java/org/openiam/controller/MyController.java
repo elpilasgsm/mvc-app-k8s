@@ -33,10 +33,15 @@ public class MyController {
     }
 
     @GetMapping("/products")
-    public String index(HttpServletRequest request) {
+    public String products(HttpServletRequest request) {
         List<ProductEntity> e = repository.findAll();
         request.setAttribute("models", e.stream().map(MyController::to).collect(Collectors.toList()));
         return "products";
+    }
+
+    @GetMapping("/")
+    public String index(HttpServletRequest request) {
+        return "index";
     }
 
 
