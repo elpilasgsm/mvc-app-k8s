@@ -23,5 +23,12 @@ steps:
   - task: Docker@2
     inputs:
       command: 'buildAndPush'
+      repository: 
       Dockerfile: 'docker/WebApp'
+      buildContext: './'
+  - task: Docker@2
+    inputs:
+      repository: 'duzaporozhets/db-app'
+      command: 'buildAndPush'
+      Dockerfile: 'docker/Database'
       buildContext: './'
