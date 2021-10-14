@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: mvc
-          image: duzaporozhets/web-app:1.0
+          image: duzaporozhets/web-app:v2.#{$(Build.BuildId)}#
           ports:
             - containerPort: 8080
           env:
