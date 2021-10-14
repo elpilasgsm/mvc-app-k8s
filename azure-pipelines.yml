@@ -45,15 +45,15 @@ steps:
         database-pv-azure.yaml
         database-secret.yaml
         mvc-deployment.azure.yaml
-      TargetFolder: '$(Pipeline.Workspace)'
+      TargetFolder: '$(Build.ArtifactStagingDirectory)'
   - task: PublishPipelineArtifact@1
     inputs:
-      targetPath: '$(Pipeline.Workspace)'
+      targetPath: '$(Build.ArtifactStagingDirectory)'
       artifact: 'drop'
       publishLocation: 'pipeline'
   - task: replacetokens@4
     inputs:
-      rootDirectory: k8
+      rootDirectory: $(Build.ArtifactStagingDirectory)
       targetFiles: |
         mvc-deployment.azure.yaml
         database-deployment.yaml
