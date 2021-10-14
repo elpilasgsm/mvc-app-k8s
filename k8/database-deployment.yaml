@@ -16,7 +16,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
         - name: database
-          image: duzaporozhets/db-app:v2.#{$(Build.BuildId)}#
+          image: duzaporozhets/db-app:v2.#{Build.BuildId}#
           ports:
             - containerPort: 3306
           env:
