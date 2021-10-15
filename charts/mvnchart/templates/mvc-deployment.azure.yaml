@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mvc-deployment
+  labels:
+    app: mvc
+spec:
+  replicas: {{ .Values.web.image.replicaCount }}
+  selector:
+    matchLabels:
+      app: mvc
+  template:
+    metadata:
+      labels:
+        app: mvc
+    spec:
+      containers:
+        - name: mvc
+          image: "{{ .Values.web.image.dockerHubId }}/{{ .Values.web.image.name }}:{{ .Values.web.image.tag }}"
+          ports:
+            - containerPort: {{ .Values.web.port }}
+          env:
+            - name: DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: database-config
+                  key: db-username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database-secret
+                  key: db-password-secret
+            - name: DB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: database-secret
+                  key: db-url-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mvc-service
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    app: mvc
+  ports:
+    - protocol: TCP
+      port:  {{ .Values.web.port }}
+      targetPort: 8080
+  type: LoadBalancer

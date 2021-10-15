@@ -1,0 +1,24 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: database-persistent-volume
+provisioner: kubernetes.io/azure-disk
+parameters:
+  storageaccounttype: Standard_LRS
+  kind: Managed
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: database-pv-claim
+  annotations:
+    volume.beta.kubernetes.io/storage-class: database-persistent-volume
+spec:
+  storageClassName: default
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

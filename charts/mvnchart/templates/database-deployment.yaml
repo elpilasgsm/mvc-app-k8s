@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: database-deployment
+  labels:
+    app: database
+spec:
+  replicas: {{ .Values.db.image.replicaCount }}
+  selector:
+    matchLabels:
+      app: database
+  template:
+    metadata:
+      labels:
+        app: database
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: database
+          image: "{{ .Values.db.image.dockerHubId }}/{{ .Values.db.image.name }}:{{ .Values.db.image.tag }}"
+          ports:
+            - containerPort: {{ .Values.db.port }}
+          env:
+            - name: MARIADB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database-secret
+                  key: db-password-secret
+          volumeMounts:
+            - name: database-persistent-volume
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: database-persistent-volume
+          persistentVolumeClaim:
+            claimName: database-pv-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: database-service
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    app: database
+  ports:
+    - protocol: TCP
+      port: {{ .Values.db.port }}
+      targetPort: {{ .Values.db.port }}
+  type: LoadBalancer
