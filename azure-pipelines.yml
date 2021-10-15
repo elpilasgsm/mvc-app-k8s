@@ -68,3 +68,8 @@ steps:
       targetPath: '$(Build.ArtifactStagingDirectory)'
       artifact: 'drop'
       publishLocation: 'pipeline'
+  - task: Bash@3
+    inputs:
+      filePath: 'cat'
+      arguments: 'k8/database-deployment.yaml'
+      workingDirectory: '.'
