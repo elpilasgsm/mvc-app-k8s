@@ -36,6 +36,23 @@ steps:
       Dockerfile: 'docker/Database'
       buildContext: '.'
       tags: 'v2.$(Build.BuildId)'
+  - task: replacetokens@4
+    inputs:
+      rootDirectory: k8
+      targetFiles: |
+        database-deployment.yaml
+        mvc-deployment.azure.yaml
+      encoding: 'auto'
+      tokenPattern: 'custom'
+      tokenPrefix: '#{'
+      tokenSuffix: '}#'
+      writeBOM: false
+      actionOnMissing: 'fail'
+      keepToken: false
+      actionOnNoFiles: 'fail'
+      enableTransforms: false
+      useLegacyPattern: false
+      enableTelemetry: true
   - task: CopyFiles@2
     inputs:
       SourceFolder: 'k8'
@@ -51,18 +68,3 @@ steps:
       targetPath: '$(Build.ArtifactStagingDirectory)'
       artifact: 'drop'
       publishLocation: 'pipeline'
-  - task: replacetokens@4
-    inputs:
-      rootDirectory: $(Build.ArtifactStagingDirectory)
-      targetFiles: |
-        mvc-deployment.azure.yaml
-        database-deployment.yaml
-      encoding: 'auto'
-      tokenPattern: 'default'
-      writeBOM: true
-      actionOnMissing: 'warn'
-      keepToken: false
-      actionOnNoFiles: 'continue'
-      enableTransforms: false
-      useLegacyPattern: false
-      enableTelemetry: true
