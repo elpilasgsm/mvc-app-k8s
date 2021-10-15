@@ -48,6 +48,14 @@ steps:
       azureResourceGroup: 'mvcapp'
       kubernetesCluster: 'mvcapp'
       namespace: 'helm-deployement'
-      chartPath: charts/mvnchart
       command: 'init'
       arguments: '--client-only'
+  - task: HelmDeploy@0
+    inputs:
+      command: 'package'
+      chartPath: 'charts/mvnchart'
+  - task: PublishPipelineArtifact@1
+    inputs:
+      targetPath: '$(Pipeline.Workspace)'
+      artifact: 'drop'
+      publishLocation: 'pipeline'
