@@ -36,35 +36,18 @@ steps:
       Dockerfile: 'docker/Database'
       buildContext: '.'
       tags: 'v2.$(Build.BuildId)'
-  - task: replacetokens@4
+  - task: HelmInstaller@0
     inputs:
-      rootDirectory: k8
-      targetFiles: |
-        database-deployment.yaml
-        mvc-deployment.azure.yaml
-      encoding: 'auto'
-      tokenPattern: 'custom'
-      tokenPrefix: '#{'
-      tokenSuffix: '}#'
-      writeBOM: false
-      actionOnMissing: 'fail'
-      keepToken: false
-      actionOnNoFiles: 'fail'
-      enableTransforms: false
-      useLegacyPattern: false
-      enableTelemetry: true
-  - task: CopyFiles@2
+      helmVersion: '2.14.1'
+      installKubectl: true
+  - task: HelmDeploy@0
+    name: helm_init_client_only
     inputs:
-      SourceFolder: 'k8'
-      Contents: |
-        database-config-map.yaml
-        database-deployment.yaml
-        database-pv-azure.yaml
-        database-secret.yaml
-        mvc-deployment.azure.yaml
-      TargetFolder: '$(Build.ArtifactStagingDirectory)'
-  - task: PublishPipelineArtifact@1
-    inputs:
-      targetPath: '$(Build.ArtifactStagingDirectory)'
-      artifact: 'drop'
-      publishLocation: 'pipeline'
+      connectionType: 'Azure Resource Manager'
+      azureSubscription: 'Subscription for tests (45b00e9e-97e3-4264-ade0-4609a447b712)'
+      azureResourceGroup: 'mvcapp'
+      kubernetesCluster: 'mvcapp'
+      namespace: 'helm-deployement'
+      chartPath: charts/mvnchart
+      command: 'init'
+      arguments: '--client-only'
