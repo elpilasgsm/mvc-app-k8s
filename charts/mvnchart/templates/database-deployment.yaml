@@ -18,7 +18,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
         - name: database
-          image: "{{ .Values.db.image.dockerHubId }}/{{ .Values.db.image.name }}:{{ .Values.db.image.tag }}"
+          image: "{{ .Values.db.image.dockerHubId }}/{{ .Values.db.image.name }}:v2.{{ .Values.db.image.tag }}"
           ports:
             - containerPort: {{ .Values.db.port }}
           env:

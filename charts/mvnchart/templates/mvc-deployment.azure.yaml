@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: mvc
-          image: "{{ .Values.web.image.dockerHubId }}/{{ .Values.web.image.name }}:{{ .Values.web.image.tag }}"
+          image: "{{ .Values.web.image.dockerHubId }}/{{ .Values.web.image.name }}:v2.{{ .Values.web.image.tag }}"
           ports:
             - containerPort: {{ .Values.web.port }}
           env:
